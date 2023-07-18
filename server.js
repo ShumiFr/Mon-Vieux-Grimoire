@@ -18,7 +18,7 @@ const normalizePort = (val) => {
 
 // Le port est récupéré à partir de la variable d'environnement process.env.PORT ou, si non défini, il est défini sur 3000 par défaut.
 // Ensuite, le port est configuré dans l'application Express en utilisant app.set().
-const port = normalizePort(process.env.PORT || "3000");
+const port = normalizePort(process.env.PORT || "4000");
 app.set("port", port);
 
 // La fonction errorHandler est définie pour gérer les erreurs de démarrage du serveur. Elle vérifie le type d'erreur et affiche un message d'erreur approprié en fonction de la nature de l'erreur.
