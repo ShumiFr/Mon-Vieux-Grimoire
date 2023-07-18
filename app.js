@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-
-const routes = require("./routes");
+const userRoutes = require("./user");
+const bookRoutes = require("./books");
 
 const app = express();
 
@@ -34,7 +34,8 @@ app.use((req, res, next) => {
 // Gestion des fichiers statiques
 app.use("/images", express.static("images"));
 
-// Utilisation des routes
-app.use("/", routes);
+// Utilisation des routes pour les utilisateurs et les livres
+router.use("/api/auth", userRoutes); // Routes pour les utilisateurs avec le préfixe "/api/auth"
+router.use("/api/books", bookRoutes); // Routes pour les livres avec le préfixe "/api/books"
 
 module.exports = app;
