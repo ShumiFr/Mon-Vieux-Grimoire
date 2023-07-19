@@ -17,8 +17,9 @@ exports.createBook = (req, res, next) => {
     imageUrl: imageUrl,
     userId: userId,
     ratings: [],
-    averageRating: 0,
   });
+
+  console.log(book);
 
   book
     .save() // Sauvegarde le livre dans la base de données

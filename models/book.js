@@ -14,7 +14,6 @@ const bookSchema = mongoose.Schema({
       grade: { type: Number }, // Note donnée à un livre
     },
   ],
-  averageRating: { type: Number }, // Note moyenne du livre
 });
 
 // Création du modèle Book à partir du schéma
