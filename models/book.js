@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 // Définition du schéma pour les livres
 const bookSchema = mongoose.Schema({
+  id: { type: mongoose.Schema.Types.ObjectId, ref: "Book" },
   title: { type: String, required: true }, // Champ titre requis
   author: { type: String, required: true }, // Champ auteur requis
   imageUrl: { type: String, required: true }, // Champ URL de l'image requis

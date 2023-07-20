@@ -19,10 +19,16 @@ exports.createBook = (req, res, next) => {
     ratings: [],
   });
 
+  console.log(JSON.parse(req.body.book));
+
   book
     .save() // Sauvegarde le livre dans la base de données
-    .then(() => {
-      res.status(201).json({ message: "Livre enregistré avec succès !" }); // Renvoie une réponse de succès
+    .then((savedBook) => {
+      const createdBookId = savedBook._id; // Récupère l'ID du livre créé
+      console.log(savedBook._id);
+      res
+        .status(201)
+        .json({ message: "Livre enregistré avec succès !", createdBookId }); // Renvoie une réponse de succès avec l'ID du livre créé
     })
     .catch((error) => {
       res.status(400).json({ error: error.message }); // Renvoie une réponse d'erreur avec le message d'erreur
