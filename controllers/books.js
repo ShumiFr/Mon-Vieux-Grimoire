@@ -3,7 +3,7 @@ const fs = require("fs");
 
 // Crée un nouveau livre
 exports.createBook = (req, res, next) => {
-  const { title, author, year, genre } = req.body; // Récupère les informations du livre depuis la requête
+  const { title, author, year, genre } = JSON.parse(req.body.book); // Récupère les informations du livre depuis la requête
   const imageUrl = `${req.protocol}://${req.get("host")}/images/${
     req.file.filename
   }`; // Construit l'URL de l'image du livre
@@ -18,8 +18,6 @@ exports.createBook = (req, res, next) => {
     userId: userId,
     ratings: [],
   });
-
-  console.log(book.title);
 
   book
     .save() // Sauvegarde le livre dans la base de données
