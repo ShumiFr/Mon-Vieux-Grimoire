@@ -19,7 +19,7 @@ exports.createBook = (req, res, next) => {
     ratings: [],
   });
 
-  console.log(book);
+  console.log(book.title);
 
   book
     .save() // Sauvegarde le livre dans la base de données

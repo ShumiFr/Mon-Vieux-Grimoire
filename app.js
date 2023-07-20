@@ -19,6 +19,7 @@ mongoose
   .catch((error) => console.log("Connexion à MongoDB échouée : ", error));
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Autorise les requêtes cross-origin (CORS)
 app.use((req, res, next) => {
