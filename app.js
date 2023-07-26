@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/user");
 const bookRoutes = require("./routes/books");
+const cors = require("cors");
 
 const app = express();
 
@@ -18,22 +19,17 @@ mongoose
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch((error) => console.log("Connexion à MongoDB échouée : ", error));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+// Configurer les options CORS pour autoriser toutes les origines
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 
-// Autorise les requêtes cross-origin (CORS)
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
-});
+// Activer CORS pour toutes les routes
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Gestion des fichiers statiques
 app.use("/images", express.static("images"));

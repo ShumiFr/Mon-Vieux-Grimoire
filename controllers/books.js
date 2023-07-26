@@ -121,3 +121,68 @@ exports.getAllBooks = (req, res, next) => {
       });
     });
 };
+
+exports.addRating = (req, res, next) => {
+  const bookId = req.params.id; // Récupère l'ID du livre depuis les paramètres de la requête
+
+  if (!bookId) {
+    return res
+      .status(400)
+      .json({ message: "Il manque l'identifiant du livre." });
+  }
+
+  Book.findOne({ _id: bookId, "ratings.userId": req.auth.userId })
+    .then((book) => {
+      if (book) {
+        return res
+          .status(400)
+          .json({ message: "Vous avez déjà noté ce livre." });
+      }
+
+      Book.findById(bookId)
+        .then((book) => {
+          if (!book) {
+            return res.status(404).json({ message: "Le livre n'existe pas." });
+          }
+
+          Book.findByIdAndUpdate(
+            bookId,
+            {
+              $push: {
+                ratings: {
+                  userId: req.auth.userId,
+                  grade: req.body.rating,
+                },
+              },
+            },
+            { new: true }
+          ).then((book) => {
+            const totalRatings = book.ratings.length;
+            const sumOfRates = book.ratings.reduce(
+              (total, rating) => total + rating.grade,
+              0
+            );
+
+            book.averageRating = sumOfRates / totalRatings;
+          });
+
+          book.save().then((book) => {
+            res.status(200).json(book);
+          });
+        })
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
+};
+
+exports.getBestRating = (req, res, next) => {
+  Book.find() //Cherche tous les livres
+    .sort({ averageRating: -1 }) //Trie par ordre décroissant ( -1 = décroissant / 1 pour croissant)
+    .limit(3) //Garder uniquement les 3 premiers
+    .then((books) => {
+      res.status(200).json(books);
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
+};
