@@ -1,23 +1,21 @@
 const mongoose = require("mongoose");
-
-// Définition du schéma pour les livres
 const bookSchema = mongoose.Schema({
-  id: { type: mongoose.Schema.Types.ObjectId, ref: "Book" },
-  title: { type: String, required: true }, // Champ titre requis
-  author: { type: String, required: true }, // Champ auteur requis
-  imageUrl: { type: String, required: true }, // Champ URL de l'image requis
-  genre: { type: String, required: true }, // Champ genre requis
-  year: { type: Number, required: true }, // Champ année requis
-  userId: { type: String },
+  userId: { type: String, required: true },
+  title: { type: String, required: true },
+  author: { type: String, required: true },
+  imageUrl: { type: String, required: true },
+  year: { type: Number, required: true },
+  genre: { type: String, required: true },
   ratings: [
     {
-      // Tableau des notes
-      userId: { type: String }, // ID de l'utilisateur ayant donné la note
-      grade: { type: Number }, // Note donnée à un livre
+      userId: { type: String, required: false },
+      grade: {
+        type: Number,
+        required: false,
+      },
     },
   ],
-  averageRatings: { type: Number, default: 0 },
+  averageRating: { type: Number, default: 0 },
 });
 
-// Création du modèle Book à partir du schéma
 module.exports = mongoose.model("Book", bookSchema);
