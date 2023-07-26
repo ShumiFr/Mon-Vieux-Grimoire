@@ -39,6 +39,9 @@ exports.addRating = (req, res, next) => {
           .status(400)
           .json({ message: "Vous avez déjà noté ce livre." });
       }
+    })
+
+    .then(() => {
       Book.findByIdAndUpdate(
         bookId,
         {
@@ -50,22 +53,26 @@ exports.addRating = (req, res, next) => {
           },
         },
         { new: true }
-      ).then((book) => {
-        if (!book) {
-          return res.status(404).json({ message: "Le livre n'existe pas." });
-        }
-        const totalRatings = book.ratings.length;
-        const sumOfRates = book.ratings.reduce(
-          (total, rating) => total + rating.grade,
-          0
-        );
+      );
+    })
 
-        book.averageRating = sumOfRates / totalRatings;
-      });
+    .then((book) => {
+      if (!book) {
+        return res.status(404).json({ message: "Le livre n'existe pas." });
+      }
+      const totalRatings = book.ratings.length;
+      const sumOfRates = book.ratings.reduce(
+        (total, rating) => total + rating.grade,
+        0
+      );
 
-      book.save().then((book) => {
-        res.status(200).json(book);
-      });
+      book.averageRating = sumOfRates / totalRatings;
+    });
+
+  book
+    .save()
+    .then((book) => {
+      res.status(200).json(book);
     })
     .catch((error) => res.status(400).json({ error }));
 };
