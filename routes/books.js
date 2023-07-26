@@ -10,7 +10,7 @@ router.post("/", auth, multer, booksCtrl.createBook); // Crée un nouveau livre
 router.post("/:id/ratings", auth, booksCtrl.addRating); // Route pour ajouter une note à un livre
 router.put("/:id", auth, multer, booksCtrl.modifyBook); // Modifie un livre existant
 router.delete("/:id", auth, booksCtrl.deleteBook); // Supprime un livre existant
-router.get("/bestrating", booksCtrl.getBestRating);
+router.get("/bestrating", booksCtrl.getBestRating); // Récupère les livres les mieux noter
 router.get("/:id", booksCtrl.getOneBook); // Obtient les informations d'un livre spécifique
 router.get("/", booksCtrl.getAllBooks); // Obtient tous les livres
 
