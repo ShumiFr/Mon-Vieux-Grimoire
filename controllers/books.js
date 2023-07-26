@@ -3,12 +3,12 @@ const fs = require("fs");
 
 // Crée un nouveau livre
 exports.createBook = (req, res, next) => {
-  const { title, author, year, genre } = JSON.parse(req.body.book); // Récupère les informations du livre depuis la requête
+  const { title, author, year, genre, ratings } = JSON.parse(req.body.book); // Récupère les informations du livre depuis la requête
   const imageUrl = `${req.protocol}://${req.get("host")}/images/${
     req.file.filename
   }`; // Construit l'URL de l'image du livre
   const userId = req.auth.userId; // Récupère l'ID de l'utilisateur connecté
-
+  console.log(ratings);
   const book = new Book({
     title: title,
     author: author,
@@ -16,16 +16,14 @@ exports.createBook = (req, res, next) => {
     genre: genre,
     imageUrl: imageUrl,
     userId: userId,
-    ratings: [],
+    ratings: ratings,
+    averageRatings: 0,
   });
-
-  console.log(JSON.parse(req.body.book));
 
   book
     .save() // Sauvegarde le livre dans la base de données
     .then((savedBook) => {
       const createdBookId = savedBook._id; // Récupère l'ID du livre créé
-      console.log(savedBook._id);
       res
         .status(201)
         .json({ message: "Livre enregistré avec succès !", createdBookId }); // Renvoie une réponse de succès avec l'ID du livre créé
@@ -41,6 +39,7 @@ exports.getOneBook = (req, res, next) => {
     _id: req.params.id, // Récupère l'ID du livre depuis les paramètres de la requête
   })
     .then((book) => {
+      console.log("saucisse :", book.ratings);
       res.status(200).json(book); // Renvoie le livre trouvé en tant que réponse
     })
     .catch((error) => {
