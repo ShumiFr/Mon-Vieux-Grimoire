@@ -27,54 +27,50 @@ exports.addRating = (req, res, next) => {
   const bookId = req.params.id; // Récupère l'ID du livre depuis les paramètres de la requête
 
   if (!bookId) {
-    return res
-      .status(400)
-      .json({ message: "Il manque l'identifiant du livre." });
+      return res
+          .status(400)
+          .json({message: "Il manque l'identifiant du livre."});
   }
 
-  Book.findOne({ _id: bookId, "ratings.userId": req.auth.userId })
-    .then((book) => {
-      if (book) {
-        return res
-          .status(400)
-          .json({ message: "Vous avez déjà noté ce livre." });
-      }
-    })
+  Book.findOne({_id: bookId, "ratings.userId": req.auth.userId})
+      .then((book) => {
+          if (book) {
+              return res
+                  .status(400)
+                  .json({message: "Vous avez déjà noté ce livre."});
+          }
+      })
 
-    .then(() => {
-      Book.findByIdAndUpdate(
-        bookId,
-        {
-          $push: {
-            ratings: {
-              userId: req.auth.userId,
-              grade: req.body.rating,
-            },
-          },
-        },
-        { new: true }
-      );
-    })
+      .then(() => {
+          Book.findByIdAndUpdate(
+              bookId,
+              {
+                  $push: {
+                      ratings: {
+                          userId: req.auth.userId,
+                          grade: req.body.rating,
+                      },
+                  },
+              },
+              {new: true}
+          ).then((book) => {
+              if (!book) {
+                  return res.status(404).json({message: "Le livre n'existe pas."});
+              }
+              const totalRatings = book.ratings.length;
+              const sumOfRates = book.ratings.reduce(
+                  (total, rating) => total + rating.grade,
+                  0
+              );
 
-    .then((book) => {
-      if (!book) {
-        return res.status(404).json({ message: "Le livre n'existe pas." });
-      }
-      const totalRatings = book.ratings.length;
-      const sumOfRates = book.ratings.reduce(
-        (total, rating) => total + rating.grade,
-        0
-      );
-
-      book.averageRating = sumOfRates / totalRatings;
-    });
-
-  book
-    .save()
-    .then((book) => {
-      res.status(200).json(book);
-    })
-    .catch((error) => res.status(400).json({ error }));
+              book.averageRating = parseInt(sumOfRates / totalRatings, 10);
+              book.save()
+                  .then((book) => {
+                      res.status(200).json(book);
+                  })
+                  .catch((error) => res.status(400).json({error}));
+          });
+      });
 };
 
 // Modifie un livre existant
