@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, callback) => {
     const name = file.originalname.split(" ").join("_"); // Renommage du fichier pour éviter les espaces
-    callback(null, name + Date.now() + "." + ".webp"); // Construction du nom de fichier unique
+    callback(null, name + Date.now() + "." + "webp"); // Construction du nom de fichier unique
   },
 });
 
