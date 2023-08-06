@@ -5,17 +5,18 @@ const userRoutes = require("./routes/user");
 const bookRoutes = require("./routes/books");
 const cors = require("cors");
 
+require("dotenv").config();
+const password = process.env.MONGODBPASSWORD;
+const urlMGDB = process.env.MONGODBURL;
+
 const app = express();
 
 // Connexion à MongoDB
 mongoose
-  .connect(
-    "mongodb+srv://Shumi:P6WvuBEy48Vwcmfl@cluster0.zzdxtzt.mongodb.net/?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(`mongodb+srv://Shumi:${password}@${urlMGDB}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch((error) => console.log("Connexion à MongoDB échouée : ", error));
 
